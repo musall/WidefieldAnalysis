@@ -28,7 +28,7 @@ blueV = bsxfun(@minus, blueV, nanmean(blueV));
 hemoV = bsxfun(@minus, hemoV, nanmean(hemoV));
 
 % high-pass blueV and hemoV above 0.1Hz
-[b, a] = butter(2,0.1/sRate, 'high');
+[b, a] = butter(4,0.1/sRate, 'high');
 blueV(~isnan(blueV(:,1)),:) = single(filtfilt(b,a,double(blueV(~isnan(blueV(:,1)),:))));
 hemoV(~isnan(blueV(:,1)),:) = single(filtfilt(b,a,double(hemoV(~isnan(hemoV(:,1)),:))));
 
@@ -46,7 +46,7 @@ U = arrayShrink(U,mask,'merge'); %only use selected pixels from mask
 
 %% smooth hemo V
 if sRate > hemoSmooth
-    [b, a] = butter(2,hemoSmooth/sRate, 'low');
+    [b, a] = butter(4,hemoSmooth/sRate, 'low');
     blueV = reshape(blueV',A,B,C);
     hemoV = reshape(hemoV',A,B,C);
     

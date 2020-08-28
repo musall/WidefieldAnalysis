@@ -12,7 +12,7 @@ end
 
 if ~exist('tPath','var') || isempty(tPath)
 %     tPath = 'X:\smusall\BpodImager\Animals\';
-    tPath = '\\grid-hs\churchland_nlsas_data\TapeDrive10\BpodImager\Animals\';    
+    tPath = '\\grid-hs\churchland_nlsas_data\TapeDrive\BpodImager\Animals\';    
 end
 
 if ~exist('copyOnly','var') || isempty(copyOnly)

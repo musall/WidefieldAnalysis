@@ -199,10 +199,9 @@ labels = {'Visual' 'Forepaw(L)' 'Forepaw(R)' 'Hindpaw(L)' 'Hindpaw(R)' 'Trunk ' 
 figure
 for x = 1:8
     subplot(2,4,x)
-    imagesc(arrayResize(mean(avgData{x+1}(:,:,18:20),3),4)); axis image
-    title(labels{x});
-%     caxis([0 0.2]); 
-    colormap jet
+    imagesc(arrayResize(mean(avgData{x+1}(:,:,18:20),3),1)); axis image
+    title(labels{x}); colormap(inferno(256));
+    caxis([0 0.3]);
 end
 
 %% show forepaw maps

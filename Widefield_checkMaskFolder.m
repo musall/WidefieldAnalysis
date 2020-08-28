@@ -21,8 +21,9 @@ for iRecs = 1:length(allRecs)
     try
         Widefield_checkMask([cPath allRecs(iRecs).name], skipCheck, circleMask)
         disp(['Completed folder: ' cPath allRecs(iRecs).name]);
-    catch
+    catch ME
         disp(['Error in folder: ' cPath allRecs(iRecs).name]);
+        disp(ME.message);
     end
 end
     

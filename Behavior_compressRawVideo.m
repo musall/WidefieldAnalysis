@@ -1,5 +1,6 @@
+
 function Behavior_compressRawVideo(sPath, Animal)
-% Code to compress raw video data off the server. 
+% Code to compress raw video data off the server.
 % Finds BehaviorVideo folders in all recordings of the sourcePath and
 % confirms that they contain SVD and pupil data already. If so, it moves
 % the raw video to the target path and also copies frametimes and the bpod
@@ -26,34 +27,35 @@ for iRecs = 1 : length(recs)
     
     % search for behavior video folder
     for iVids = 1 : length(rawVids)
-            
-        cFile = [sPath recs(iRecs).name filesep rawVids(iVids).name];
-        rawData = squeeze(importdata(cFile));
-        if max(rawData(:)) > 255 %data is not int8
-            if max(rawData(:)) > 65535 %data is not int16
-                error('Unknown data type');
+        try
+            cFile = [sPath recs(iRecs).name filesep rawVids(iVids).name];
+            rawData = squeeze(importdata(cFile));
+            if max(rawData(:)) > 255 %data is not int8
+                if max(rawData(:)) > 65535 %data is not int16
+                    error('Unknown data type');
+                else
+                    rawData = mat2gray(rawData,[0 65535]);
+                end
             else
-                rawData = mat2gray(rawData,[0 65535]);
+                rawData = mat2gray(rawData,[0 255]);
             end
-        else
-            rawData = mat2gray(rawData,[0 255]);
-        end
-        
-        rawData = padarray(rawData, 8 - [rem(size(rawData,1),8), rem(size(rawData,2),8)], 0, 'post'); %pad array to be dividable by 8
-        rawData = reshape(rawData, size(rawData,1),size(rawData,2),1,[]);
-        
-        v = VideoWriter(strrep(cFile, '.mj2', ''), 'MPEG-4'); %save as compressed video file
-        v.Quality = 100;
-        open(v); 
-        if size(rawData,4) > 500
-            for iFrames = 1 : size(rawData,4)
-                writeVideo(v,rawData(:,:,:,iFrames));
+            
+            rawData = padarray(rawData, 8 - [rem(size(rawData,1),8), rem(size(rawData,2),8)], 0, 'post'); %pad array to be dividable by 8
+            rawData = reshape(rawData, size(rawData,1),size(rawData,2),1,[]);
+            
+            v = VideoWriter(strrep(cFile, '.mj2', ''), 'MPEG-4'); %save as compressed video file
+            v.Quality = 100;
+            open(v);
+            if size(rawData,4) > 500
+                for iFrames = 1 : size(rawData,4)
+                    writeVideo(v,rawData(:,:,:,iFrames));
+                end
+            else
+                writeVideo(v,rawData);
             end
-        else
-            writeVideo(v,rawData);
+            close(v);
+            delete(cFile);
         end
-        close(v);
-        delete(cFile);
         
     end
 end

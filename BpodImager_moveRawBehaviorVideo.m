@@ -6,12 +6,12 @@ function BpodImager_moveRawBehaviorVideo(Animal, sPath, tPath)
 % file.
 
 if ~exist('sPath','var') || isempty(sPath)
-    sPath = 'Y:\data\BpodImager\Animals\';
+    sPath = 'Z:\data\BpodImager\Animals\';
 %     sPath = 'U:\smusall\BpodImager\Animals';
 end
 if ~exist('tPath','var') || isempty(tPath)
 %     tPath = 'X:\smusall\BehaviorVideo\Animals\';
-    tPath = 'Y:\TapeDrive7\BehaviorVideo\Animals';
+    tPath = 'Z:\TapeDrive\BehaviorVideo\Animals';
 end
 
 if sPath(end) ~= filesep
@@ -52,10 +52,10 @@ for iRecs = 1 : length(recs)
             
             if sum(checker) == length(checker) %if all conditions are true, move/copy some data
                 
-                rawVids = dir([csPath recs(iRecs).name filesep cFiles(iFiles).name filesep Animal '*mj2']);
-                rawMP4s = dir([csPath recs(iRecs).name filesep cFiles(iFiles).name filesep Animal '*mp4']);
+                rawVids = dir([csPath recs(iRecs).name filesep cFiles(iFiles).name filesep 'CSP23' '*mj2']);
+                rawMP4s = dir([csPath recs(iRecs).name filesep cFiles(iFiles).name filesep 'CSP23' '*mp4']);
                 rawVids = [rawVids; rawMP4s];
-                frameTimes = dir([csPath recs(iRecs).name filesep cFiles(iFiles).name filesep Animal '*frameTimes*.mat']);
+                frameTimes = dir([csPath recs(iRecs).name filesep cFiles(iFiles).name filesep 'CSP23' '*frameTimes*.mat']);
                 bhvFile = dir([csPath recs(iRecs).name filesep Animal '*.mat']);
                 
                 if length(rawVids) > 2
@@ -71,9 +71,9 @@ for iRecs = 1 : length(recs)
                     end
                     
                     % show indicator positions to ensure eyeTrace ect will be correct.
-                    faceVids = dir([csPath recs(iRecs).name filesep cFiles(iFiles).name filesep Animal '*1.mj2']); %cam1 should be the face camera
+                    faceVids = dir([csPath recs(iRecs).name filesep cFiles(iFiles).name filesep 'CSP23' '*1.mj2']); %cam1 should be the face camera
                     if isempty(faceVids)
-                    faceVids = dir([csPath recs(iRecs).name filesep cFiles(iFiles).name filesep Animal '*1.mp4']); %cam1 should be the face camera
+                    faceVids = dir([csPath recs(iRecs).name filesep cFiles(iFiles).name filesep 'CSP23' '*1.mp4']); %cam1 should be the face camera
                     end
                     v = VideoReader([csPath recs(iRecs).name filesep cFiles(iFiles).name filesep faceVids(1).name]); %get single frame from facecam
                     pic = readFrame(v); clear v;
@@ -88,7 +88,9 @@ for iRecs = 1 : length(recs)
                     for iVids = 1 : length(rawVids)
                         sourceFile = [csPath recs(iRecs).name filesep cFiles(iFiles).name filesep rawVids(iVids).name];
                         targetFile = [tPath Animal filesep recs(iRecs).name filesep rawVids(iVids).name];
-                        if contains(sourceFile, '0001_1.mj2') || contains(sourceFile, '0001_2.mj2')
+                        if contains(sourceFile, '0001_1.mj2') || contains(sourceFile, '0001_2.mj2') || ...
+                           contains(sourceFile, '0001_1.mp4') || contains(sourceFile, '0001_2.mp4')
+                           
                             copyfile(sourceFile, targetFile); %dont move first two video files
                         else 
                             movefile(sourceFile, targetFile);
@@ -111,22 +113,22 @@ for iRecs = 1 : length(recs)
                     
                     toc;
                     disp('Done');
-                elseif length(rawVids) ~= 2
-                    try %if no video data is found, try to copy first set of videos back to the server
-                        cFile = dir([tPath Animal filesep recs(iRecs).name filesep '*0001_1.mj2']);
-                        sourceFile = [tPath Animal filesep recs(iRecs).name filesep cFile.name];
-                        targetFile = [csPath recs(iRecs).name filesep 'BehaviorVideo' filesep cFile.name];
-                        copyfile(sourceFile, targetFile);
-                        
-                        cFile = dir([tPath Animal filesep recs(iRecs).name filesep '*0001_2.mj2']);
-                        sourceFile = [tPath Animal filesep recs(iRecs).name filesep cFile.name];
-                        targetFile = [csPath recs(iRecs).name filesep 'BehaviorVideo' filesep cFile.name];
-                        copyfile(sourceFile, targetFile);
-                        
-                        disp('==================');
-                        disp(['Found behavior SVD: ' csPath recs(iRecs).name filesep cFiles(iFiles).name])
-                        disp('No movie files found. Copying two videos back to server.');
-                    end
+%                 elseif length(rawVids) ~= 2
+%                     try %if no video data is found, try to copy first set of videos back to the server
+%                         cFile = dir([tPath Animal filesep recs(iRecs).name filesep '*0001_1.mj2']);
+%                         sourceFile = [tPath Animal filesep recs(iRecs).name filesep cFile.name];
+%                         targetFile = [csPath recs(iRecs).name filesep 'BehaviorVideo' filesep cFile.name];
+%                         copyfile(sourceFile, targetFile);
+%                         
+%                         cFile = dir([tPath Animal filesep recs(iRecs).name filesep '*0001_2.mj2']);
+%                         sourceFile = [tPath Animal filesep recs(iRecs).name filesep cFile.name];
+%                         targetFile = [csPath recs(iRecs).name filesep 'BehaviorVideo' filesep cFile.name];
+%                         copyfile(sourceFile, targetFile);
+%                         
+%                         disp('==================');
+%                         disp(['Found behavior SVD: ' csPath recs(iRecs).name filesep cFiles(iFiles).name])
+%                         disp('No movie files found. Copying two videos back to server.');
+%                     end
                 end
             end
         end

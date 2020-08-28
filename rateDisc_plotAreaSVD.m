@@ -1,10 +1,9 @@
-function [gDimCnt, lDimCnt, sessionVar, sessionVarMap, sessionAvgVarMap, recs] = rateDisc_plotAreaSVD(cPath, animal, lastRec, doPlot,trainingRange)
+function [gDimCnt, lDimCnt, sessionVar, sessionVarMap, sessionAvgVarMap, modelVarMaps, recs] = rateDisc_plotAreaSVD(cPath, animal, lastRec, doPlot,trainingRange)
 %% some variables
 % nDims = [100, 500, 1000]; %number of whole-frame components to test
 % cPath = '\\grid-hs\churchland_hpc_home\smusall\BpodImager\Animals\'; %data path to grid server
 % cPath = '\\grid-hs\churchland_nlsas_data\data\BpodImager\Animals\'; %data path on the server
 
-[dataOverview, ~, ~, ~, ~, ~, ~, ~, trainDates] = rateDiscRecordings; %basic training info
 bPath = [cPath animal filesep 'blockData' filesep]; % path for blockdata
 load([bPath 'mask_' trainingRange '.mat'],'allenMask');
 
@@ -30,6 +29,8 @@ try
     load([bPath 'sessionVar_' trainingRange '.mat'],'sessionVar', 'sessionVarMap', 'sessionAvgVarMap');
     sessionVarMap = arrayShrink(sessionVarMap, allenMask, 'split');
     sessionAvgVarMap = arrayShrink(sessionAvgVarMap, allenMask, 'split');
+    load([bPath 'modelMaps_' trainingRange '.mat'],'modelVarMaps');
+    modelVarMaps = arrayShrink(modelVarMaps.^2, allenMask, 'split');
 catch
     errFiles = [];
 end
@@ -55,6 +56,7 @@ if ~isempty(errFiles)
     [nDims,b] = sort(nDims);
     allMse = allMse(b,:);
     recs(~useIdx) = [];
+    modelVarMaps(:,:,:,~useIdx) = [];
 
     %% get dimensioanlity for local and global dimensions
     for iRecs = 1 : size(allMse,2)

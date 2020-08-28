@@ -28,8 +28,8 @@ elseif nargin == 2
   if ismac
     basePath = '/Volumes/churchland_hpc_home/space_managed_data/BpodImager/Animals';
   elseif ispc
-%     basePath = 'U:\smusall\BpodImager\Animals';
-    basePath = '\\grid-hs\churchland_nlsas_data\data\BpodImager\Animals';
+    basePath = 'U:\smusall\BpodImager\Animals';
+%     basePath = '\\grid-hs\churchland_nlsas_data\data\BpodImager\Animals';
   end
   
   if ~exist(basePath, 'dir')

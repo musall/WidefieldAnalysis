@@ -12,6 +12,7 @@ function im = alignAllenTransIm(im, transParams)
 
 offset = 5E1;
 
+dSize = size(im);
 [h, w, d] = size(im);
 
 % Set pixels off from zero
@@ -43,7 +44,8 @@ im = im + theMin - offset;
 im(minIdx) = theMin;
 
 % Trim result (rotate expands it)
-[rH, rW, rD] = size(im);
-trimH = floor((rH - h) / 2);
-trimW = floor((rW - w) / 2);
-im = im(trimH + (1:h), trimW + (1:w), :);
+newSize = size(im);
+trimH = floor((newSize(1) - dSize(1)) / 2);
+trimW = floor((newSize(2) - dSize(2)) / 2);
+im = im(trimH + (1:dSize(1)), trimW + (1:dSize(2)), :);
+im = reshape(im, dSize);
