@@ -50,7 +50,7 @@ for iAnimals = 1:length({animals.name})
                         cFile = strrep(cFile,'.dat','.mat');
                         save(strrep(cFile,'Frames','frameTimes'),'frameTimes'); %save frametimes
                         v = VideoWriter(strrep(cFile,'mat','mj2'),'Archival'); %save as compressed video file
-                        open(v);writeVideo(v,Data);close(v);
+                        open(v); writeVideo(v,Data); close(v);
                         cFile = strrep(cFile,'mat','dat');
                         delete(cFile);
                         
